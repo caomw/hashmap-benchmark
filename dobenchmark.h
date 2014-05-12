@@ -4,6 +4,8 @@
 #include <ctime>
 #include <string>
 
+#include "getmemusage.h"
+
 //Calls a member function (void mf(void)) of an object
 //Measures time and memory usage
 
@@ -25,10 +27,11 @@ template<typename T>
 BenchmarkResult DoBenchmark(T& t, void (T::*mf)())
 {
 	BenchmarkResult br;
+	br.allocatedBytes = GetMemUsage();
 	double t0 = TimeStamp();
 	(t.*mf)();
 	br.elapsedSec = TimeStamp() - t0;
-	br.allocatedBytes = 0;
+	br.allocatedBytes = GetMemUsage() - br.allocatedBytes;
 	return br;
 }
 

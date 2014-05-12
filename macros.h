@@ -5,7 +5,7 @@
 #ifdef BUILD_PARAM_KEY_TYPE
 #define KEY_TYPE BUILD_PARAM_KEY_TYPE
 #else
-#define KEY_TYPE size_t
+#define KEY_TYPE ptrdiff_t
 #endif
 
 #ifdef BUILD_PARAM_MAPPED_TYPE_SIZE

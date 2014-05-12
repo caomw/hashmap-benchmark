@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <typeinfo>
 
+#include "macros.h"
+
 template<typename HashMapType>
 class HarnessImpl
 : public Harness
@@ -19,20 +21,20 @@ public:
 	}
 	virtual void FillSequential()
 	{
-		for(size_t i = 0; i < kMapSize; ++i)
+		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
 			(*hm)[i] = i;
 		if(hm->size() != kMapSize)
 			throw std::runtime_error("FillSequential: bad map size.");
 	}
 	virtual void LookupAllSequential()
 	{
-		for(size_t i = 0; i < kMapSize; ++i)
+		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
 		if ((*hm)[i] != i)
 			throw std::runtime_error("LookupAllSequential: bad value.");
 	}
 	virtual void RemoveAllSequential()
 	{
-		for(size_t i = 0; i < kMapSize; ++i)
+		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
 		if (hm->erase(i) != 1)
 			throw std::runtime_error("RemoveAllSequential: key not found.");
 	}
@@ -50,6 +52,7 @@ public:
 			s.erase(p, std::string::npos);
 		return s;
 	}
+	HashMapType* hashMap() { return hm.get(); }
 private:
 	std::unique_ptr<HashMapType> hm;
 	const size_t kMapSize;

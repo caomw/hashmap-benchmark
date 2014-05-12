@@ -8,6 +8,8 @@ if(Boost_FOUND)
 	add_definitions(-DHAVE_BOOST -DBOOST_ALL_NO_LIB)
 endif()
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 file(GLOB srcs ${CMAKE_SOURCE_DIR}/*.h ${CMAKE_SOURCE_DIR}/*.cpp)
 add_executable(hashmapbenchmark
 	${srcs})
