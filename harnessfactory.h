@@ -17,15 +17,9 @@
 class HarnessFactory
 {
 public:
-	explicit HarnessFactory(size_t itemCount);
-
-	void setItemCount(size_t s);
-
 	Harness* create_std_unordered_map(); //ownership passed
 	Harness* create_std_map(); //ownership passed
 	std::vector<Harness*> createAll(); //ownership passed
-private:
-	size_t itemCount;
 };
 
 

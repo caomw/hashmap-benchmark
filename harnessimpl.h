@@ -8,41 +8,48 @@
 #include <typeinfo>
 
 #include "macros.h"
+#include "util.h"
+
 
 template<typename HashMapType>
 class HarnessImpl
 : public Harness
 {
 public:
-	HarnessImpl(size_t mapSize)
-	: hm(new HashMapType)
-	, kMapSize(mapSize)
+	HarnessImpl()
+	: hashMap(new HashMapType)
 	{
 	}
-	virtual void FillSequential()
+	virtual void fill(size_t beginKey, size_t endKey)
 	{
-		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
-			(*hm)[i] = i;
-		if(hm->size() != kMapSize)
-			throw std::runtime_error("FillSequential: bad map size.");
+		HashMapType& hm = *hashMap;
+		if (bRandomize)
+			for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+				hm[hash64(i)] = i;
+		else
+			for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+				hm[i] = i;
 	}
-	virtual void LookupAllSequential()
+	/*
+	virtual void LookupAllSequential(size_t beginKey, size_t endKey)
 	{
-		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
-		if ((*hm)[i] != i)
-			throw std::runtime_error("LookupAllSequential: bad value.");
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
+			if (hm[i] != i)
+				throw std::runtime_error("LookupAllSequential: bad value.");
 	}
-	virtual void RemoveAllSequential()
+	virtual void RemoveAllSequential(size_t beginKey, size_t endKey)
 	{
-		for(KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
-		if (hm->erase(i) != 1)
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
+		if (hm.erase(i) != 1)
 			throw std::runtime_error("RemoveAllSequential: key not found.");
-	}
+	}*/
 	//virtual void FillRandom() = 0;
 	//virtual void LookupAllRandom() = 0;
 	virtual void deleteContainer()
 	{
-		hm.reset();
+		hashMap.reset();
 	}
 	virtual std::string hashMapType() const
 	{
@@ -50,12 +57,19 @@ public:
 		size_t p = s.find_first_of('<');
 		if (p != std::string::npos)
 			s.erase(p, std::string::npos);
+		if (s.find("class ") == 0 || s.find("struct ") == 0)
+		{
+			size_t p = s.find_first_of(' ');
+			s.erase(0, p + 1);
+		}
 		return s;
 	}
-	HashMapType* hashMap() { return hm.get(); }
+	virtual size_t size() const
+	{
+		return hashMap->size();
+	}
 private:
-	std::unique_ptr<HashMapType> hm;
-	const size_t kMapSize;
+	std::unique_ptr<HashMapType> hashMap;
 };
 
 

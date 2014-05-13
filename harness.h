@@ -9,17 +9,27 @@
 class Harness
 {
 public:
-	virtual void FillSequential() = 0;
-	virtual void LookupAllSequential() = 0;
-	virtual void RemoveAllSequential() = 0;
+	Harness() : bRandomize(true) {}
+	virtual ~Harness() {}
+
+	void setRandomize(bool b) //to use hash(key) instead of key, default: true
+	{
+		bRandomize = b;
+	}
+
+	virtual void fill(size_t beginKey, size_t endKey) = 0;
+	//virtual void LookupAllSequential() = 0;
+	//virtual void RemoveAllSequential() = 0;
 	//virtual void FillRandom() = 0;
 	//virtual void LookupAllRandom() = 0;
 	virtual void deleteContainer() = 0;
 
+	virtual size_t size() const = 0;
+
 	//base type name, without the template parameters
 	virtual std::string hashMapType() const = 0;
-
-	virtual ~Harness() {}
+protected:
+	bool bRandomize;
 };
 
 

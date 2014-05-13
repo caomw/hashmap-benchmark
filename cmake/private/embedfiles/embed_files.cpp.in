@@ -1,0 +1,36 @@
+//
+// WARNING: Generated file.
+// Do not edit or you risk losing your modifications.
+//
+#include "@header_name@.h"
+#include <cstring>
+
+namespace
+{
+	struct FileContent
+	{
+		const char *name;
+		const char *bytes;
+		int length;
+	};
+	FileContent fileContent[] = {@all_contents@
+		{0, 0, -1}
+	};
+}
+
+extern "C"
+const char* @function_name@(const char* path, int *length)
+{
+	FileContent *fc = fileContent;
+	while (fc->name)
+	{
+		if (!strcmp(fc->name, path))
+		{
+			if (length)
+				*length = fc->length;
+			return fc->bytes;
+		}
+		++fc;
+	}
+	return 0;
+}

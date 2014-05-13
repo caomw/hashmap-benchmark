@@ -1,0 +1,13 @@
+//
+// WARNING: Generated file.
+// Do not edit or you risk losing your modifications.
+//
+#ifndef @header_guard@
+#define @header_guard@
+
+#ifdef __cplusplus
+extern "C"
+#endif
+const char* @function_name@(const char* path, int *length);
+
+#endif
