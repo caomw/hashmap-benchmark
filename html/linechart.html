@@ -5,10 +5,10 @@
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable($);
+        var data = google.visualization.arrayToDataTable(${ARRAY});
 
         var options = {
-          title: 'Overhead per item [bytes]', hAxis: { title: 'Size of the Map (item count)'}
+          title: 'Memory overhead of hash maps, element size: ${ITEMSIZE} bytes', vAxis: { title: 'Overhead / item (bytes)'}, hAxis: { title: 'Size of the map (item count)'}
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

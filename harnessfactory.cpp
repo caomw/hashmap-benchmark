@@ -14,12 +14,12 @@
 
 #include "loki/AssocVector.h"
 
-#include "macros.h"
+#include "consts.h"
 #include "mappedtype.h"
 #include "harnessimpl.h"
 
 std::vector<Harness*> HarnessFactory::
-	createAll()
+	createAll(bool bAddLokiAssocVector)
 {
 	typedef KEY_TYPE KT;
 	typedef MappedType<KEY_TYPE, MAPPED_TYPE_SIZE> MT;
@@ -47,10 +47,13 @@ std::vector<Harness*> HarnessFactory::
 	v.push_back(new HarnessImpl<google_dense_hash_map_adapter>);
 	v.push_back(new HarnessImpl<GoogleSHM>);
 
-	typedef Loki::AssocVector<KT, MT> LokiAV;
+	if (bAddLokiAssocVector)
+	{
+		typedef Loki::AssocVector<KT, MT> LokiAV;
 
-	v.push_back(new HarnessImpl<LokiAV>);
-	v.back()->setRandomize(false);
+		v.push_back(new HarnessImpl<LokiAV>);
+		v.back()->setRandomize(false); //don't randomize to speed up insertion
+	}
 
 	return v;
 }

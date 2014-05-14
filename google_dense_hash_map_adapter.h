@@ -2,7 +2,7 @@
 #define INCLUDE_GUARD_google_dense_hash_map_adapter_1399903289
 
 #include <sparsehash/dense_hash_map>
-#include "macros.h"
+#include "consts.h"
 #include "mappedtype.h"
 
 class google_dense_hash_map_adapter

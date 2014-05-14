@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <typeinfo>
 
-#include "macros.h"
+#include "consts.h"
 #include "util.h"
 
 
