@@ -30,7 +30,57 @@ public:
 			for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
 				hm[i] = i;
 	}
+	virtual void count(size_t beginKey, size_t endKey, bool bExpectedResult)
+	{
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		{
+			bool bFound = hm.count(hash64(i)) > 0;
+			if (bFound != bExpectedResult)
+				throw std::runtime_error("contains(): bad result");
+		}
+	}
+	virtual void find(size_t beginKey, size_t endKey, bool bExpectedResult)
+	{
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		{
+			auto it = hm.find(hash64(i));
+			bool bFound = it != hm.end() && it->second.value() == i;
+			if (bFound != bExpectedResult)
+				throw std::runtime_error("find(): bad result");
+		}
+	}
+/*	virtual void at(size_t beginKey, size_t endKey, bool bExpectedResult)
+	{
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		{
+			bool bFound = hm.at(hash64(i)).value() == i;
+			if (bFound != bExpectedResult)
+				throw std::runtime_error("at(): bad result");
+		}
+	}*/
+	virtual void remove(size_t beginKey, size_t endKey)
+	{
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		{
+			if(hm.erase(hash64(i)) != 1)
+				throw std::runtime_error("remove(): bad result");
+		}
+	}
 	/*
+	virtual void contains(size_t beginKey, size_t endKey, bool bExpectedResult)
+	{
+		HashMapType& hm = *hashMap;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		{
+			bool bFound = hm.contains(hash64(i)) > 0;
+			if (bFound != bExpectedResult)
+				throw std::runtime_error("contains(): bad result");
+		}
+	}
 	virtual void LookupAllSequential(size_t beginKey, size_t endKey)
 	{
 		HashMapType& hm = *hashMap;
@@ -51,7 +101,7 @@ public:
 	{
 		hashMap.reset();
 	}
-	virtual std::string hashMapType() const
+	virtual std::string hashMapTypeName() const
 	{
 		std::string s = typeid(HashMapType).name();
 		size_t p = s.find_first_of('<');

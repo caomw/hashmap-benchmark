@@ -4,12 +4,15 @@
 #include <map>
 #include <sstream>
 #include <fstream>
+#include <memory>
 
 #include "consts.h"
 #include "harnessfactory.h"
 #include "getmemusage.h"
 #include "embedded_html_files.h"
 #include "util.h"
+
+#include <unordered_map>
 
 void memtest()
 {
@@ -24,38 +27,37 @@ void memtest()
 	HarnessFactory hf;
 
 	//space graphs
-	std::vector<Harness*> hs(hf.createAll(true));
+	size_t nMaps = hf.mapCount();
 	std::map<size_t, std::vector<double>> results; // results[hashMapIdx][run]
 	//initialize results array
-	for (size_t i = 0; i < hs.size(); ++i)
+	for (size_t i = 0; i < nMaps; ++i)
 	{
 		results[i].resize(kNumRunsPerTest);
 	}
-	for (auto it = hs.begin(); it != hs.end(); ++it)
+	for (size_t hmidx = 0; hmidx < nMaps; ++hmidx)
 	{
-		size_t hmidx = it - hs.begin();
-		printf("Testing memory usage of %s\n", (*it)->hashMapType().c_str());
+		printf("Testing memory usage of %s\n", hf.mapTypeNameByIdx(hmidx).c_str());
+		std::unique_ptr<Harness> hm(hf.createByIdx(hmidx));
 		size_t mem0 = GetMemUsage();
 		size_t prevItemCount = 0;
 		for (int r = 0; r < itemCounts.size(); ++r)
 		{
 			printf("%d..", r);
-			(*it)->fill(prevItemCount, itemCounts[r]);
+			hm->fill(prevItemCount, itemCounts[r]);
 			prevItemCount = itemCounts[r];
 			results[hmidx][r] =
-				(double)(GetMemUsage() - mem0) / (*it)->size() - kItemSize;
+				(double)(GetMemUsage() - mem0) / hm->size() - kItemSize;
 		}
-		(*it)->deleteContainer();
 		printf("\n");
 	}
 	std::ostringstream ss;
 	ss << "[";
 	// header
 	ss << "[ 'Raw data MB'";
-	size_t nc = hs.size(); //num of cols
+	size_t nc = nMaps; //num of cols
 	size_t nr = kNumRunsPerTest; //num of rows
-	for (auto it = hs.begin(); it != hs.end(); ++it)
-		ss << ", '" << (*it)->hashMapType() << "'";
+	for (size_t hmidx = 0; hmidx < nMaps; ++hmidx)
+		ss << ", '" << hf.mapTypeNameByIdx(hmidx) << "'";
 	ss << "]\n";
 	// body
 	for (size_t r = 0; r < nr; ++r)
@@ -68,9 +70,6 @@ void memtest()
 		ss << "]\n";
 	}
 	ss << "]";
-
-	for (auto it = hs.begin(); it != hs.end(); ++it)
-		delete *it;
 
 	//insert dataTable into line chart
 

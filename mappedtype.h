@@ -10,20 +10,20 @@ class MappedType
 public:
 	MappedType() {}
 	MappedType(const MappedType& x)
-	: value(x)
+	: v(x.v)
 	{}
 	MappedType& operator=(const ValueType& x)
 	{
-		value = x;
+		v = x;
 		return *this;
 	}
-	operator ValueType () const
+	ValueType value() const
 	{
-		return value;
+		return v;
 	}
 private:
 	union {
-		ValueType value;
+		ValueType v;
 		char padding[kSize];
 	};
 };

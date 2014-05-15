@@ -21,8 +21,6 @@ struct BenchmarkResult
 	std::string toString(size_t count = 1) const;
 };
 
-double TimeStamp();
-
 template<typename T>
 BenchmarkResult DoBenchmark(T& t, void (T::*mf)())
 {

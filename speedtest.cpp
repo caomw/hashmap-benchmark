@@ -1,8 +1,29 @@
 #include "speedtest.h"
 
 #include <vector>
+#include <map>
+#include <memory>
 
 #include "consts.h"
+#include "harnessfactory.h"
+#include "timer.h"
+
+struct SpeedResult
+{
+	SpeedResult()
+		: fillRate(0)
+		, countExistingRate(0), findExistingRate(0)
+		, countMissingRate(0), findMissingRate(0)
+		, removeRate(0), deleteRate(0)
+	{}
+	double fillRate;
+	double countMissingRate;
+	double findMissingRate;
+	double countExistingRate;
+	double findExistingRate;
+	double removeRate;
+	double deleteRate;
+};
 
 void speedtest()
 {
@@ -17,34 +38,70 @@ void speedtest()
 		double ex = ex_min + i * dex;
 		itemCounts.push_back((size_t)pow(10, ex));
 	}
-#if 0
 	HarnessFactory hf;
 
-	//space graphs
-	std::vector<Harness*> hs(hf.createAll());
-	std::map<size_t, std::vector<double>> results; // results[hashMapIdx][run]
+	size_t nMaps = hf.mapCount();
+	std::vector<std::vector<SpeedResult>> results; // results[hashMapIdx][run]
 	//initialize results array
-	for (size_t i = 0; i < hs.size(); ++i)
+	results.resize(nMaps);
+	for (size_t i = 0; i < nMaps; ++i)
 	{
 		results[i].resize(kNumRunsPerTest);
 	}
-	for (auto it = hs.begin(); it != hs.end(); ++it)
+	for (size_t hmidx = 0; hmidx < nMaps; ++hmidx)
 	{
-		size_t hmidx = it - hs.begin();
-		printf("Testing memory usage of %s\n", (*it)->hashMapType().c_str());
-		size_t mem0 = GetMemUsage();
+		printf("Testing speed of %s\n", hf.mapTypeNameByIdx(hmidx).c_str());
+		for (size_t r = 0; r < kNumRunsPerTest; ++r)
+		{
+			std::unique_ptr<Harness> hm(hf.createByIdx(hmidx));
+
+			//test fill
+			double tic = TimeStamp();
+			hm->fill(0, itemCounts[r]);
+			double dt = TimeStamp() - tic;
+			size_t s = hm->size();
+			results[hmidx][r].fillRate = s / dt;
+
+			//test count() existing
+			tic = TimeStamp();
+			hm->count(0, itemCounts[r], true);
+			dt = TimeStamp() - tic;
+			results[hmidx][r].countExistingRate = s / dt;
+
+			//test count() missing
+			tic = TimeStamp();
+			hm->count(0 + itemCounts[r], itemCounts[r] + itemCounts[r], false);
+			dt = TimeStamp() - tic;
+			results[hmidx][r].countMissingRate = s / dt;
+
+			//test find() existing
+			tic = TimeStamp();
+			hm->find(0, itemCounts[r], true);
+			dt = TimeStamp() - tic;
+			results[hmidx][r].findExistingRate = s / dt;
+
+			//test find() missing
+			tic = TimeStamp();
+			hm->find(0 + itemCounts[r], itemCounts[r] + itemCounts[r], false);
+			dt = TimeStamp() - tic;
+			results[hmidx][r].findMissingRate = s / dt;
+
+			//test 
+		}
+
 		size_t prevItemCount = 0;
 		for (int r = 0; r < itemCounts.size(); ++r)
 		{
 			printf("%d..", r);
-			(*it)->fill(prevItemCount, itemCounts[r]);
+			hm->fill(prevItemCount, itemCounts[r]);
 			prevItemCount = itemCounts[r];
-			results[hmidx][r] =
-				(double)(GetMemUsage() - mem0) / (*it)->size() - kItemSize;
+//			results[hmidx][r] =
+	//			(double)(GetMemUsage() - mem0) / (*it)->size() - kItemSize;
 		}
-		(*it)->deleteContainer();
+		hm->deleteContainer();
 		printf("\n");
 	}
+	/*
 	std::ostringstream ss;
 	ss << "[";
 	// header
@@ -84,5 +141,5 @@ void speedtest()
 	//write out
 	std::ofstream ofs("hash_maps_memtest_linechart.html");
 	ofs << linechart;
-#endif
+*/
 }

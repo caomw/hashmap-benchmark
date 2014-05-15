@@ -2,24 +2,46 @@
 #define INCLUDE_GUARD_harnessfactory_1399849088
 
 #include <vector>
+#include <string>
 
 #include "harness.h"
 
-//Create a benchmarking harness with a hash map of the specified type
+//Create a benchmarking harness with a hash map of different types
 //
-//Key type will be as specified
-//in consts.h (or as build parameters, see there)
-//The mapped type will be the key type padded to the size
-//of the mapped-type-size specified in consts.h or as a build parameter.
-//
-//It will create harnesses that do benchmarking tests
-//with map size of itemCount.
+//The key type of the hash map is set in consts.h (or as build parameters, see there)
+//The mapped type of the hash map is the key type padded to the size
+//set in consts.h or as a build parameter.
 class HarnessFactory
 {
 public:
-	//Loki::AssocVector can be included for the mem test
-	//as a best-case reference
-	std::vector<Harness*> createAll(bool bAddLokiAssocVector); //ownership passed
+	enum MapId {
+		M_FIRST,
+		M_STD_UNORDERED_MAP = M_FIRST,
+		M_STD_MAP,
+		M_BOOST_UNORDERED_MAP,
+		M_BOOST_MAP,
+		M_BOOST_FLAT_MAP,
+		M_BOOST_SPARSE_MAP,
+		M_BOOST_DENSE_MAP,
+		M_LOKI_ASSOCVECTOR,
+		M_LAST = M_LOKI_ASSOCVECTOR,
+		M_COUNT,
+	};
+	HarnessFactory();
+
+	size_t mapCount() const; //valid indices will be [0..mapCount)
+	std::string mapTypeNameByIdx(size_t idx) const;
+
+	Harness* createById(MapId id); //ownership passed
+	Harness* createByIdx(size_t idx); //ownership passed
+
+private:
+	struct Map
+	{
+		std::string typeName;
+		MapId id;
+	};
+	std::vector<Map> maps;
 };
 
 
