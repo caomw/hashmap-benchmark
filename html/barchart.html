@@ -1,0 +1,40 @@
+<!-- Parameters to substitute:
+     ARRAY
+     TITLE
+     VAXIS_TITLE
+     HAXIS_TITLE
+-->
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var a = ${ARRAY};
+        var a_most = a.slice(0, a.length-2);
+        a_most = a_most.concat([a[a.length-1]]);
+        var a_delete = [a[0], a[a.length-2]];
+        var data_most = google.visualization.arrayToDataTable(a_most);
+        var data_delete = google.visualization.arrayToDataTable(a_delete);
+
+        var options_most = {
+          title: '${TITLE}',
+          vAxis: {title: '${VAXIS_TITLE}'},
+          hAxis: {title: '${HAXIS_TITLE}'},
+        };
+        var options_delete = options_most;
+        options_delete.hAxis.logScale = true;
+
+        var chart_most = new google.visualization.BarChart(document.getElementById('chart_div_most'));
+        var chart_delete = new google.visualization.BarChart(document.getElementById('chart_div_delete'));
+        chart_most.draw(data_most, options_most);
+        chart_delete.draw(data_delete, options_delete);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div_most" style="width: 1400px; height: 1000px;"></div>
+    <div id="chart_div_delete" style="width: 1400px; height: 300px;"></div>
+  </body>
+</html>

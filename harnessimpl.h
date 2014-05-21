@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <typeinfo>
 
-#include "consts.h"
+#include "config.h"
 #include "util.h"
 
 
@@ -23,19 +23,15 @@ public:
 	virtual void fill(size_t beginKey, size_t endKey)
 	{
 		HashMapType& hm = *hashMap;
-		if (bRandomize)
-			for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
-				hm[hash64(i)] = i;
-		else
-			for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
-				hm[i] = i;
+		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+			hm[transformKey(i)] = i;
 	}
 	virtual void count(size_t beginKey, size_t endKey, bool bExpectedResult)
 	{
 		HashMapType& hm = *hashMap;
 		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
 		{
-			bool bFound = hm.count(hash64(i)) > 0;
+			bool bFound = hm.count(transformKey(i)) > 0;
 			if (bFound != bExpectedResult)
 				throw std::runtime_error("contains(): bad result");
 		}
@@ -45,7 +41,7 @@ public:
 		HashMapType& hm = *hashMap;
 		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
 		{
-			auto it = hm.find(hash64(i));
+			auto it = hm.find(transformKey(i));
 			bool bFound = it != hm.end() && it->second.value() == i;
 			if (bFound != bExpectedResult)
 				throw std::runtime_error("find(): bad result");
@@ -56,47 +52,34 @@ public:
 		HashMapType& hm = *hashMap;
 		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
 		{
-			bool bFound = hm.at(hash64(i)).value() == i;
+			bool bFound = hm.at(transformKey(i)).value() == i;
 			if (bFound != bExpectedResult)
 				throw std::runtime_error("at(): bad result");
 		}
 	}*/
-	virtual void remove(size_t beginKey, size_t endKey)
+	virtual void remove(size_t beginKey, size_t endKey, bool bReverse)
 	{
+		if (beginKey > endKey)
+			throw std::runtime_error("remove(): bad range");
+
 		HashMapType& hm = *hashMap;
-		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
+		if (!bReverse)
+			for (size_t i = beginKey; i < endKey; ++i)
+			{
+				if (hm.erase(transformKey(i)) != 1)
+					throw std::runtime_error("remove(): bad result");
+			}
+		else
 		{
-			if(hm.erase(hash64(i)) != 1)
-				throw std::runtime_error("remove(): bad result");
+			size_t i = endKey;
+			while (i != beginKey)
+			{
+				--i;
+				if (hm.erase(transformKey(i)) != 1)
+					throw std::runtime_error("remove(): bad result");
+			}
 		}
 	}
-	/*
-	virtual void contains(size_t beginKey, size_t endKey, bool bExpectedResult)
-	{
-		HashMapType& hm = *hashMap;
-		for (KEY_TYPE i = beginKey; i < (KEY_TYPE)endKey; ++i)
-		{
-			bool bFound = hm.contains(hash64(i)) > 0;
-			if (bFound != bExpectedResult)
-				throw std::runtime_error("contains(): bad result");
-		}
-	}
-	virtual void LookupAllSequential(size_t beginKey, size_t endKey)
-	{
-		HashMapType& hm = *hashMap;
-		for (KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
-			if (hm[i] != i)
-				throw std::runtime_error("LookupAllSequential: bad value.");
-	}
-	virtual void RemoveAllSequential(size_t beginKey, size_t endKey)
-	{
-		HashMapType& hm = *hashMap;
-		for (KEY_TYPE i = 0; i < (KEY_TYPE)kMapSize; ++i)
-		if (hm.erase(i) != 1)
-			throw std::runtime_error("RemoveAllSequential: key not found.");
-	}*/
-	//virtual void FillRandom() = 0;
-	//virtual void LookupAllRandom() = 0;
 	virtual void deleteContainer()
 	{
 		hashMap.reset();

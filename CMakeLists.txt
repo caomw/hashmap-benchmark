@@ -14,9 +14,12 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
 	)
-
+	
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedFiles.cmake)
-embed_files(embedded_html_files RELATIVE html FILES html/linechart.html)
+embed_files(embedded_html_files
+	RELATIVE html
+	FILES html/linechart.html html/barchart.html
+	)
 
 file(GLOB srcs ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 list(APPEND srcs

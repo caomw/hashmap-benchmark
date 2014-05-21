@@ -8,22 +8,22 @@
 
 //Create a benchmarking harness with a hash map of different types
 //
-//The key type of the hash map is set in consts.h (or as build parameters, see there)
+//The key type of the hash map is set in config.h (or as build parameters, see there)
 //The mapped type of the hash map is the key type padded to the size
-//set in consts.h or as a build parameter.
+//set in config.h or as a build parameter.
 class HarnessFactory
 {
 public:
 	enum MapId {
 		M_FIRST,
-		M_STD_UNORDERED_MAP = M_FIRST,
-		M_STD_MAP,
-		M_BOOST_UNORDERED_MAP,
+		M_STD_MAP = M_FIRST,
 		M_BOOST_MAP,
-		M_BOOST_FLAT_MAP,
-		M_BOOST_SPARSE_MAP,
-		M_BOOST_DENSE_MAP,
+		M_STD_UNORDERED_MAP,
+		M_BOOST_UNORDERED_MAP,
+		M_GOOGLE_SPARSE_MAP,
+		M_GOOGLE_DENSE_MAP,
 		M_LOKI_ASSOCVECTOR,
+		M_BOOST_FLAT_MAP,
 		M_LAST = M_LOKI_ASSOCVECTOR,
 		M_COUNT,
 	};

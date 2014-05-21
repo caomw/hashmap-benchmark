@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "consts.h"
+#include "config.h"
 #include "memtest.h"
 #include "speedtest.h"
 
@@ -13,5 +13,5 @@ int main(int argc, const char* argv[])
 	printf("Item size: %d\n", kItemSize);
 
 	memtest();
-	speedtest();
+	speedtest(SP_SINGLE_ELEMENT_COUNT);
 }

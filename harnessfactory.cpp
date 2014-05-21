@@ -9,12 +9,11 @@
 #include <map>
 #include <unordered_map>
 
-#include "google_dense_hash_map_adapter.h"
-#include <sparsehash/sparse_hash_map>
+#include "google_hash_map_adapters.h"
 
 #include "loki/AssocVector.h"
 
-#include "consts.h"
+#include "config.h"
 #include "mappedtype.h"
 #include "harnessimpl.h"
 
@@ -67,10 +66,10 @@ Harness* HarnessFactory::
 #else
 		return nullptr;
 #endif
-	case M_BOOST_SPARSE_MAP:
-		return new HarnessImpl<google::sparse_hash_map<KT, MT>>;
-	case M_BOOST_DENSE_MAP:
-		return new HarnessImpl<google_dense_hash_map_adapter>;
+	case M_GOOGLE_SPARSE_MAP:
+		return new HarnessImpl<google_sparse_hash_map_adapter<KT, MT>>;
+	case M_GOOGLE_DENSE_MAP:
+		return new HarnessImpl<google_dense_hash_map_adapter<KT, MT>>;
 	case M_LOKI_ASSOCVECTOR:
 	{
 		Harness *p = new HarnessImpl<Loki::AssocVector<KT, MT>>;
@@ -80,4 +79,22 @@ Harness* HarnessFactory::
 	default:
 		return nullptr;
 	}
+}
+
+size_t HarnessFactory::
+	mapCount() const
+{
+	return maps.size();
+}
+
+std::string HarnessFactory::
+	mapTypeNameByIdx(size_t idx) const
+{
+	return maps[idx].typeName;
+}
+
+Harness* HarnessFactory::
+	createByIdx(size_t idx)
+{
+	return createById(maps[idx].id);
 }

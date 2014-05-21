@@ -1,3 +1,10 @@
+<!-- Parameters to substitute:
+     ARRAY
+     TITLE
+     VAXIS_TITLE
+     HAXIS_TITLE
+     HAXIS_LOGSCALE
+-->
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -8,7 +15,9 @@
         var data = google.visualization.arrayToDataTable(${ARRAY});
 
         var options = {
-          title: 'Memory overhead of hash maps, element size: ${ITEMSIZE} bytes', vAxis: { title: 'Overhead / item (bytes)'}, hAxis: { title: 'Size of the map (item count)'}
+          title: '${TITLE}',
+          hAxis: { title: '${HAXIS_TITLE}', logScale: ${HAXIS_LOGSCALE}},
+          vAxis: { title: '${VAXIS_TITLE}'}
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -17,6 +26,6 @@
     </script>
   </head>
   <body>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div id="chart_div" style="width: 900px; height: 700px;"></div>
   </body>
 </html>

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <memory>
 
-#include "consts.h"
+#include "config.h"
 #include "harnessfactory.h"
 #include "getmemusage.h"
 #include "embedded_html_files.h"
@@ -79,11 +79,12 @@ void memtest()
 	std::string linechart(p, l);
 
 	replace_string(linechart, "${ARRAY}", ss.str());
-	std::ostringstream itemsize_string;
-	itemsize_string << kItemSize;
-	replace_string(linechart, "${ITEMSIZE}", itemsize_string.str());
+	replace_string(linechart, "${TITLE}", "Memory overhead test of maps, element size (key+value) = " + to_string(kItemSize) + " bytes");
+	replace_string(linechart, "${HAXIS_TITLE}", "Element count");
+	replace_string(linechart, "${VAXIS_TITLE}", "Bytes per element");
+	replace_string(linechart, "${HAXIS_LOGSCALE}", "false");
 
 	//write out
-	std::ofstream ofs("hash_maps_memtest_linechart.html");
+	std::ofstream ofs("hash_map_memtest.html");
 	ofs << linechart;
 }

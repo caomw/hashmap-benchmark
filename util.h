@@ -24,5 +24,13 @@ T hash64(T x)
 //in-place replace searchString with replaceString
 void replace_string(std::string& s, const std::string& searchString, const std::string& replaceString);
 
+template<typename T>
+std::string to_string(const T& x)
+{
+	std::ostringstream oss;
+	oss << x;
+	return oss.str();
+}
+
 #endif
 
