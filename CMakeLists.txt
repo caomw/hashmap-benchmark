@@ -10,6 +10,12 @@ if(Boost_FOUND)
 	add_definitions(-DHAVE_BOOST -DBOOST_ALL_NO_LIB)
 endif()
 
+find_package(Poco COMPONENTS Foundation)
+if(POCO_FOUND)
+	add_definitions(-DHAVE_POCO)
+endif()
+
+
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -31,7 +37,7 @@ add_executable(hashmapbenchmark
 	${srcs}
 	${linechart_SOURCES})
 
-foreach(i Boost)
+foreach(i Boost POCO)
 	include_directories(${${i}_INCLUDE_DIRS})
 	target_link_libraries(hashmapbenchmark ${${i}_LIBRARIES})
 	add_definitions(${${i}_DEFINITIONS})

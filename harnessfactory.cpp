@@ -1,9 +1,13 @@
 #include "harnessfactory.h"
 
-#if HAVE_BOOST
+#ifdef HAVE_BOOST
 #include <boost/unordered_map.hpp>
 #include <boost/container/flat_map.hpp>
 #include <boost/container/map.hpp>
+#endif
+
+#ifdef HAVE_POCO
+#include "poco_hash_map_adapter.h"
 #endif
 
 #include <map>
@@ -45,8 +49,14 @@ Harness* HarnessFactory::
 		return new HarnessImpl<std::unordered_map<KT, MT>>;
 	case M_STD_MAP:
 		return new HarnessImpl<std::map<KT, MT>>;
+	case M_POCO_HASH_MAP:
+#ifdef HAVE_POCO
+		return new HarnessImpl<poco_hash_map_adapter<KT, MT>>;
+#else
+		return nullptr;
+#endif
 	case M_BOOST_UNORDERED_MAP:
-#if HAVE_BOOST
+#ifdef HAVE_BOOST
 		return new HarnessImpl<boost::unordered_map<KT, MT>>;
 #else
 		return nullptr;
