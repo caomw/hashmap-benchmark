@@ -6,7 +6,6 @@
 #include <sparsehash/dense_hash_map>
 #include <sparsehash/sparse_hash_map>
 #include "config.h"
-#include "mappedtype.h"
 
 template<typename K, typename M>
 class google_dense_hash_map_adapter

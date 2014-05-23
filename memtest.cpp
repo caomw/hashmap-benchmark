@@ -46,7 +46,7 @@ void memtest()
 			hm->fill(prevItemCount, itemCounts[r]);
 			prevItemCount = itemCounts[r];
 			results[hmidx][r] =
-				(double)(GetMemUsage() - mem0) / hm->size() - kItemSize;
+				round(100.0 * (double)(GetMemUsage() - mem0) / hm->size() / kItemSize);
 		}
 		printf("\n");
 	}
@@ -81,7 +81,7 @@ void memtest()
 	replace_string(linechart, "${ARRAY}", ss.str());
 	replace_string(linechart, "${TITLE}", "Memory overhead test of maps, element size (key+value) = " + to_string(kItemSize) + " bytes");
 	replace_string(linechart, "${HAXIS_TITLE}", "Element count");
-	replace_string(linechart, "${VAXIS_TITLE}", "Bytes per element");
+	replace_string(linechart, "${VAXIS_TITLE}", "Overhead [%]");
 	replace_string(linechart, "${HAXIS_LOGSCALE}", "false");
 
 	//write out
