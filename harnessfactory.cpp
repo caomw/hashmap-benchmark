@@ -46,18 +46,18 @@ Harness* HarnessFactory::
 	switch (id)
 	{
 	case M_STD_UNORDERED_MAP:
-		return new HarnessImpl<std::unordered_map<KT, MT>>;
+		return new HarnessImpl<std::unordered_map<KT, MT> >("std::unordered_map");
 	case M_STD_MAP:
-		return new HarnessImpl<std::map<KT, MT>>;
+        return new HarnessImpl<std::map<KT, MT> >("std::map");
 	case M_POCO_HASH_MAP:
 #ifdef HAVE_POCO
-		return new HarnessImpl<poco_hash_map_adapter<KT, MT>>;
+		return new HarnessImpl<poco_hash_map_adapter<KT, MT>>("Poco::HashMap");
 #else
 		return nullptr;
 #endif
 	case M_BOOST_UNORDERED_MAP:
 #ifdef HAVE_BOOST
-		return new HarnessImpl<boost::unordered_map<KT, MT>>;
+		return new HarnessImpl<boost::unordered_map<KT, MT> >("boost::unordered_map");
 #else
 		return nullptr;
 #endif
@@ -65,24 +65,24 @@ Harness* HarnessFactory::
 	{
 //boost::container::map 1.55.0 doesn't work with vs2013
 #if defined HAVE_BOOST && (!defined(_MSC_VER) || _MSC_VER < 1800)
-		return new HarnessImpl<boost::container::map<KT, MT>>;
+		return new HarnessImpl<boost::container::map<KT, MT> >("boost::container::map");
 #else
 		return nullptr;
 #endif
 	}
 	case M_BOOST_FLAT_MAP:
 #if defined HAVE_BOOST && (!defined(_MSC_VER) || _MSC_VER < 1800)
-		return new HarnessImpl<boost::container::flat_map<KT, MT>>;
+		return new HarnessImpl<boost::container::flat_map<KT, MT> >("boost::container::flat_map");
 #else
 		return nullptr;
 #endif
 	case M_GOOGLE_SPARSE_MAP:
-		return new HarnessImpl<google_sparse_hash_map_adapter<KT, MT>>;
+		return new HarnessImpl<google_sparse_hash_map_adapter<KT, MT> >("google::sparse_hash_map");
 	case M_GOOGLE_DENSE_MAP:
-		return new HarnessImpl<google_dense_hash_map_adapter<KT, MT>>;
+		return new HarnessImpl<google_dense_hash_map_adapter<KT, MT> >("google::dense_hash_map");
 	case M_LOKI_ASSOCVECTOR:
 	{
-		Harness *p = new HarnessImpl<Loki::AssocVector<KT, MT>>;
+		Harness *p = new HarnessImpl<Loki::AssocVector<KT, MT> >("Loki::AssocVector");
 		p->setRandomize(false); //don't randomize to speed up insertion
 		return p;
 	}

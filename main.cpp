@@ -9,8 +9,8 @@
 
 int main(int argc, const char* argv[])
 {
-	printf("Key type: '%s', mapped type size: %d\n", STRINGIZE(KEY_TYPE), MAPPED_TYPE_SIZE);
-	printf("Item size: %d\n", kItemSize);
+	printf("Key type: '%s', mapped type size: %d\n", STRINGIZE(KEY_TYPE), (int)MAPPED_TYPE_SIZE);
+	printf("Item size: %d\n", (int)kItemSize);
 
 	memtest();
 	speedtest(SP_SINGLE_ELEMENT_COUNT);

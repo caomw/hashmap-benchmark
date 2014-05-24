@@ -28,7 +28,7 @@ void memtest()
 
 	//space graphs
 	size_t nMaps = hf.mapCount();
-	std::map<size_t, std::vector<double>> results; // results[hashMapIdx][run]
+	std::map< size_t, std::vector<double> > results; // results[hashMapIdx][run]
 	//initialize results array
 	for (size_t i = 0; i < nMaps; ++i)
 	{

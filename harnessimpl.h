@@ -16,8 +16,9 @@ class HarnessImpl
 : public Harness
 {
 public:
-	HarnessImpl()
+	HarnessImpl(const char* name)
 	: hashMap(new HashMapType)
+    , name(name)
 	{
 	}
 	virtual void fill(size_t beginKey, size_t endKey)
@@ -86,16 +87,7 @@ public:
 	}
 	virtual std::string hashMapTypeName() const
 	{
-		std::string s = typeid(HashMapType).name();
-		size_t p = s.find_first_of('<');
-		if (p != std::string::npos)
-			s.erase(p, std::string::npos);
-		if (s.find("class ") == 0 || s.find("struct ") == 0)
-		{
-			size_t p = s.find_first_of(' ');
-			s.erase(0, p + 1);
-		}
-		return s;
+        return name;
 	}
 	virtual size_t size() const
 	{
@@ -103,6 +95,7 @@ public:
 	}
 private:
 	std::unique_ptr<HashMapType> hashMap;
+    std::string name;
 };
 
 

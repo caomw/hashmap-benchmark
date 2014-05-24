@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GUARD_consts_1399849207
 #define INCLUDE_GUARD_consts_1399849207
 
-#include <cstdlib>
+#include <cstddef>
 
 #include "mappedtype.h"
 

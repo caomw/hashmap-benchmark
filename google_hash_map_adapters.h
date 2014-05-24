@@ -11,13 +11,14 @@ template<typename K, typename M>
 class google_dense_hash_map_adapter
 	: public google::dense_hash_map<K, M>
 {
+    typedef google::dense_hash_map<K, M> super_t;
 public:
 	google_dense_hash_map_adapter()
 	{
 		//needs to set special values, key must be signed
 		static_assert(std::numeric_limits<K>::is_signed, "KEY_TYPE must be signed if you test google::dense_hash_map");
-		set_empty_key(-1);
-		set_deleted_key(-2);
+        super_t::set_empty_key(-1);
+        super_t::set_deleted_key(-2);
 	}
 };
 
@@ -25,12 +26,13 @@ template<typename K, typename M>
 class google_sparse_hash_map_adapter
 	: public google::sparse_hash_map<K, M>
 {
+    typedef google::sparse_hash_map<K, M> super_t;
 public:
 	google_sparse_hash_map_adapter()
 	{
 		//needs to set special values, key must be signed
 		static_assert(std::numeric_limits<K>::is_signed, "KEY_TYPE must be signed if you test google::sparse_hash_map");
-		set_deleted_key(-2);
+        super_t::set_deleted_key(-2);
 	}
 };
 

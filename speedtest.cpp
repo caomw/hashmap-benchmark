@@ -6,6 +6,7 @@
 #include <memory>
 #include <sstream>
 #include <fstream>
+#include <cmath>
 
 #include "config.h"
 #include "harnessfactory.h"
@@ -77,7 +78,7 @@ void speedtest(SpeedTestMethod spm)
 	size_t nMaps = hf.mapCount();
 	
 	//initialize results array
-	std::vector<std::vector<SpeedResult>> results; // results[hashMapIdx][run]
+	std::vector< std::vector<SpeedResult> > results; // results[hashMapIdx][run]
 	results.resize(nMaps, std::vector<SpeedResult>(itemCounts.size()));
 
 	for (size_t hmidx = 0; hmidx < nMaps; ++hmidx)
@@ -88,7 +89,7 @@ void speedtest(SpeedTestMethod spm)
 		size_t hm_size = 0;
 		for (size_t r = 0; r < itemCounts.size(); ++r)
 		{
-			printf("# of elems: %d ", itemCounts[r]);
+			printf("# of elems: %u ", (unsigned)itemCounts[r]);
 
 			for (int t = 0; t < SpeedResult::R_MAX; ++t)
 			{
