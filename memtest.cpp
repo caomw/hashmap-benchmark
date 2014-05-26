@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include <sstream>
-#include <fstream>
 #include <memory>
 
 #include "config.h"
@@ -81,10 +80,9 @@ void memtest()
 	replace_string(linechart, "${ARRAY}", ss.str());
 	replace_string(linechart, "${TITLE}", "Memory overhead test of maps, element size (key+value) = " + to_string(kItemSize) + " bytes");
 	replace_string(linechart, "${HAXIS_TITLE}", "Element count");
-	replace_string(linechart, "${VAXIS_TITLE}", "Overhead [%]");
+	replace_string(linechart, "${VAXIS_TITLE}", "Actual footprint to ideal [%]");
 	replace_string(linechart, "${HAXIS_LOGSCALE}", "false");
 
 	//write out
-	std::ofstream ofs("hash_map_memtest.html");
-	ofs << linechart;
+    save_result("hash_map_memtest.html", linechart.c_str());
 }

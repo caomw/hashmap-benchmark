@@ -34,5 +34,9 @@ std::string to_string(const T& x)
 	return oss.str();
 }
 
+std::string getcwd();
+
+void save_result(const char* rel_fname, const char* data);
+
 #endif
 

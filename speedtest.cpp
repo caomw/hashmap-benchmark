@@ -17,7 +17,7 @@
 struct SpeedResult
 {
 	enum Rates {
-		R_FILL, R_COUNT_MISSING, R_COUNT_EXISTING, R_FIND_MISSING, R_FIND_EXISTING, R_DELETE, R_REMOVE, R_MAX
+		R_FILL, R_FIND_MISSING, R_FIND_EXISTING, R_DELETE, R_REMOVE, R_MAX
 	};
 
 	static const char* names[R_MAX];
@@ -32,8 +32,6 @@ struct SpeedResult
 const char* rateTitles[SpeedResult::R_MAX] =
 {
 	"Fill rate (map<>::insert())",
-	"Count-missing-elements rate (map<>::count())",
-	"Count-existing-elements rate (map<>::count())",
 	"Find-missing-elements rate (map<>::find())",
 	"Find-existing-elements rate (map<>::find())",
 	"Delete pre-filled map rate (map<>::~map<>)"
@@ -43,7 +41,7 @@ const char* rateTitles[SpeedResult::R_MAX] =
 const char* SpeedResult::
 names[SpeedResult::R_MAX] =
 {
-	"fill", "count-missing", "count-existing",
+	"fill",
 	"find-missing", "find-existing",
 	"delete", "remove"
 };
@@ -115,12 +113,6 @@ void speedtest(SpeedTestMethod spm)
 					hm->fill(0, itemCounts[r]);
 					hm_size = hm->size();
 					break;
-				case SpeedResult::R_COUNT_MISSING:
-					hm->count(0 + itemCounts[r], itemCounts[r] + itemCounts[r], false);
-					break;
-				case SpeedResult::R_COUNT_EXISTING:
-					hm->count(0, itemCounts[r], true);
-					break;
 				case SpeedResult::R_FIND_MISSING:
 					hm->find(0 + itemCounts[r], itemCounts[r] + itemCounts[r], false);
 					break;
@@ -173,14 +165,11 @@ void speedtest(SpeedTestMethod spm)
 
 		replace_string(linechart, "${ARRAY}", ss.str());
 		replace_string(linechart, "${TITLE}", "Speed test of hash maps, element count: " + to_string(itemCounts[0]) + ", element size = " + to_string(kItemSize) + " bytes (key+value)");
-		replace_string(linechart, "${HAXIS_TITLE}", "Element count");
-		replace_string(linechart, "${VAXIS_TITLE}", "Operations per second (Hz)");
+		replace_string(linechart, "${HAXIS_TITLE}", "Operations per second [Hz]");
+		replace_string(linechart, "${VAXIS_TITLE}", "Operation");
 
 		//write out
-		std::ostringstream fname;
-		fname << "hash_maps_speedtest.html";
-		std::ofstream ofs(fname.str());
-		ofs << linechart;
+        save_result("hash_maps_speedtest.html", linechart.c_str());
 	}
 	else
 	{
@@ -215,15 +204,14 @@ void speedtest(SpeedTestMethod spm)
 
 			replace_string(linechart, "${ARRAY}", ss.str());
 			replace_string(linechart, "${TITLE}", std::string(rateTitles[ridx]) + ", element size = " + to_string(kItemSize) + " bytes (key+value)");
-			replace_string(linechart, "${HAXIS_TITLE}", "Element count");
-			replace_string(linechart, "${VAXIS_TITLE}", "Operations per second (Hz)");
+			replace_string(linechart, "${HAXIS_TITLE}", "Operations per second [Hz]");
+			replace_string(linechart, "${VAXIS_TITLE}", "Operation");
 			replace_string(linechart, "${HAXIS_LOGSCALE}", "true");
 
 			//write out
-			std::ostringstream fname;
-			fname << "hash_maps_speedtest_" << SpeedResult::names[ridx] << ".html";
-			std::ofstream ofs(fname.str());
-			ofs << linechart;
+            save_result(
+                        (std::string("hash_maps_speedtest_") + SpeedResult::names[ridx] + ".html").c_str(),
+                        linechart.c_str());
 		}
 	}
 }
