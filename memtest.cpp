@@ -44,8 +44,11 @@ void memtest()
 			printf("%d..", r);
 			hm->fill(prevItemCount, itemCounts[r]);
 			prevItemCount = itemCounts[r];
+            //values below 100 are caused by imprecision of the measurement
+            //clamp to 100 to make the graph look better
+            //(the y = 100 grid line will be drawn)
 			results[hmidx][r] =
-				round(100.0 * (double)(GetMemUsage() - mem0) / hm->size() / kItemSize);
+                std::max(100.0, round(100.0 * (double)(GetMemUsage() - mem0) / hm->size() / kItemSize));
 		}
 		printf("\n");
 	}
