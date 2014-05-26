@@ -204,9 +204,9 @@ void speedtest(SpeedTestMethod spm)
 
 			replace_string(linechart, "${ARRAY}", ss.str());
 			replace_string(linechart, "${TITLE}", std::string(rateTitles[ridx]) + ", element size = " + to_string(kItemSize) + " bytes (key+value)");
-			replace_string(linechart, "${HAXIS_TITLE}", "Operations per second [Hz]");
-			replace_string(linechart, "${VAXIS_TITLE}", "Operation");
-			replace_string(linechart, "${HAXIS_LOGSCALE}", "true");
+			replace_string(linechart, "${HAXIS_TITLE}", "Element count");
+			replace_string(linechart, "${VAXIS_TITLE}", "Operations per second [Hz]");
+            replace_string(linechart, "${HAXIS_LOGSCALE}", "false");
 
 			//write out
             save_result(

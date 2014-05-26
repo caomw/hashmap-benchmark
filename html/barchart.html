@@ -18,18 +18,21 @@
         var data_most = google.visualization.arrayToDataTable(a_most);
         var data_delete = google.visualization.arrayToDataTable(a_delete);
 
-        var options_most = {
+        var options = {
           title: '${TITLE}',
           vAxis: {title: '${VAXIS_TITLE}'},
           hAxis: {title: '${HAXIS_TITLE}'},
         };
-        var options_delete = options_most;
-        options_delete.hAxis.logScale = true;
 
         var chart_most = new google.visualization.BarChart(document.getElementById('chart_div_most'));
         var chart_delete = new google.visualization.BarChart(document.getElementById('chart_div_delete'));
-        chart_most.draw(data_most, options_most);
-        chart_delete.draw(data_delete, options_delete);
+
+        chart_most.draw(data_most, options);
+
+        options.hAxis.logScale = true;
+        options.hAxis.title = options.hAxis.title + ' (log scale)';
+
+        chart_delete.draw(data_delete, options);
       }
     </script>
   </head>
