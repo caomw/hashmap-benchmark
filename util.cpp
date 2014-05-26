@@ -32,7 +32,7 @@ void replace_string(std::string& s, const std::string& searchString, const std::
 
 void save_result(const char* rel_fname, const char* data)
 {
-	std::ofstream ofs(rel_fname);
+	std::ofstream ofs(rel_fname, std::ios::trunc);
 	ofs << data;
     
     printf("Results saved to: %s/%s\n", getcwd().c_str(), rel_fname);
