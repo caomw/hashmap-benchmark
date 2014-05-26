@@ -72,7 +72,11 @@ Harness* HarnessFactory::
 	}
 	case M_BOOST_FLAT_MAP:
 #if defined HAVE_BOOST && (!defined(_MSC_VER) || _MSC_VER < 1800)
-		return new HarnessImpl<boost::container::flat_map<KT, MT> >("boost::container::flat_map");
+    {
+		Harness* p = new HarnessImpl<boost::container::flat_map<KT, MT> >("boost::container::flat_map");
+        p->setRandomize(false);
+        return p;
+    }
 #else
 		return nullptr;
 #endif

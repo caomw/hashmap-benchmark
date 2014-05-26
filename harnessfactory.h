@@ -25,7 +25,7 @@ public:
 		M_POCO_HASH_MAP,
 		M_LOKI_ASSOCVECTOR,
 		M_BOOST_FLAT_MAP,
-		M_LAST = M_LOKI_ASSOCVECTOR,
+		M_LAST = M_BOOST_FLAT_MAP,
 		M_COUNT,
 	};
 	HarnessFactory();
