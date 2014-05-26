@@ -4,6 +4,7 @@
 #include <map>
 #include <sstream>
 #include <memory>
+#include <algorithm>
 
 #include "config.h"
 #include "harnessfactory.h"
